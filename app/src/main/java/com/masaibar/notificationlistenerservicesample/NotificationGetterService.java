@@ -11,8 +11,10 @@ import android.util.Log;
 
 public class NotificationGetterService extends NotificationListenerService {
 
+    private static final String KEY_TITLE = "android.title";
+    private static final String KEY_BODY = "android.text";
+    private static final String KEY_SUMMARY_TEXT = "android.summaryText";
     private static boolean isNotificationAccessEnabled = false;
-    private static String TARGET_PACKAGE = "com.whatsapp";
 
     public static boolean isIsNotificationAccessEnabled() {
         return isNotificationAccessEnabled;
@@ -21,7 +23,30 @@ public class NotificationGetterService extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
-        handleNotification(sbn);
+
+        StatusBarNotification[] statusBarNotifications = getActiveNotifications();
+        if (statusBarNotifications == null) {
+            return;
+        }
+
+        for (StatusBarNotification statusBarNotification : statusBarNotifications) {
+            Notification notification = statusBarNotification.getNotification();
+            if (notification == null) {
+                continue;
+            }
+            Bundle extra = notification.extras;
+            if (extra == null) {
+                continue;
+            }
+
+            Log.d("!!!",
+                    String.format(
+                            "packageName = %s, title = %s, body = %s",
+                            statusBarNotification.getPackageName(),
+                            notification.extras.getString(KEY_TITLE),
+                            notification.extras.getString(KEY_BODY))
+            );
+        }
     }
 
     @Override
@@ -55,43 +80,6 @@ public class NotificationGetterService extends NotificationListenerService {
         isNotificationAccessEnabled = false;
         Log.d("!!!", "onListenerDisconnected");
         super.onListenerDisconnected();
-    }
-
-
-    private static final String KEY_TITLE = "android.title";
-    private static final String KEY_BODY = "android.text";
-    private static final String KEY_SUMMARY_TEXT = "android.summaryText";
-
-    private void handleNotification(StatusBarNotification sbn) {
-        String packageName = sbn.getPackageName();
-
-        if (!TextUtils.equals(packageName, TARGET_PACKAGE)) {
-            return;
-        }
-
-        long postedTime = sbn.getPostTime();
-        String tag = sbn.getTag();
-
-        Notification notification = sbn.getNotification();
-        Bundle extra = notification.extras;
-
-        if (TextUtils.isEmpty(tag)) {
-            return;
-        }
-
-        if (!TextUtils.isEmpty(getStringByKey(extra, KEY_SUMMARY_TEXT))) {
-            return;
-        }
-
-        String title = getStringByKey(extra, KEY_TITLE);
-        String body = getStringByKey(extra, KEY_BODY);
-
-        Log.d(
-                "!!!",
-                String.format(
-                        "postedTime = %s, tag = %s, title = %s, body = %s",
-                        postedTime, tag, title, body)
-        );
     }
 
     public String getStringByKey(Bundle bundle, String key) {

@@ -1,10 +1,14 @@
 package com.masaibar.notificationlistenerservicesample;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
                 openNotificationAccessSettings(getApplicationContext());
             }
         });
+
+        findViewById(R.id.button_send).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNotification();
+            }
+        });
     }
 
     @Override
@@ -30,6 +41,17 @@ public class MainActivity extends AppCompatActivity {
                 NotificationGetterService.isIsNotificationAccessEnabled() ?
                         "enabled" : "disabled"
         );
+    }
+
+    private void sendNotification() {
+        Notification notification = new NotificationCompat.Builder(getApplicationContext())
+                .setContentTitle("title")
+                .setContentText("content")
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .build();
+
+        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(0, notification);
     }
 
     public void openNotificationAccessSettings(Context context) {

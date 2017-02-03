@@ -19,14 +19,13 @@
         android:text="設定を開く"/>
 
     <Button
-        android:id="@+id/button_get_all"
+        android:id="@+id/button_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="get all"/>
+        android:text="send notification"/>
 
     <TextView
         android:id="@+id/text_status"
-        android:text="status:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>

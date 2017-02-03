@@ -22,7 +22,11 @@ public class NotificationGetterService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        super.onNotificationPosted(sbn);
+        try {
+            super.onNotificationPosted(sbn);
+        } catch (AbstractMethodError ignored) {
+
+        }
 
         StatusBarNotification[] statusBarNotifications = getActiveNotifications();
         if (statusBarNotifications == null) {

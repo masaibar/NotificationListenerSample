@@ -47,9 +47,9 @@ public class NotificationGetterService extends NotificationListenerService {
                     String.format(
                             "packageName = %s, title = %s, body = %s",
                             statusBarNotification.getPackageName(),
-                            notification.extras.getString(KEY_TITLE),
-                            notification.extras.getString(KEY_BODY))
-            );
+                            getStringByKey(extra, KEY_TITLE),
+                            getStringByKey(extra, KEY_BODY)
+                    ));
         }
     }
 

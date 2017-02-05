@@ -54,13 +54,17 @@ public class NotificationGetterService extends NotificationListenerService {
                 continue;
             }
 
-            Log.d("!!!",
-                    String.format(
-                            "packageName = %s, title = %s, body = %s",
-                            statusBarNotification.getPackageName(),
-                            getStringByKey(extra, KEY_TITLE),
-                            getStringByKey(extra, KEY_BODY)
-                    ));
+            String packageName = statusBarNotification.getPackageName();
+            Log.d("!!!", String.format("============ %s ============",packageName));
+            for (String key : extra.keySet()) {
+                Object value = extra.get(key);
+                if (value == null) {
+                    continue;
+                }
+                Log.d("!!!",
+                        String.format("[%s], key = %s, value = %s (%s)",
+                                packageName, key, value.toString(), value.getClass().getName()));
+            }
         }
     }
 
@@ -95,18 +99,5 @@ public class NotificationGetterService extends NotificationListenerService {
         isNotificationAccessEnabled = false;
         Log.d("!!!", "onListenerDisconnected");
         super.onListenerDisconnected();
-    }
-
-    public String getStringByKey(Bundle bundle, String key) {
-        if (bundle == null) {
-            return null;
-        }
-
-        if (!bundle.containsKey(key)) {
-            return null;
-        }
-
-        CharSequence c = bundle.getCharSequence(key);
-        return TextUtils.isEmpty(c) ? null : c.toString();
     }
 }

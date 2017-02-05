@@ -1,9 +1,12 @@
 package com.masaibar.notificationlistenerservicesample;
 
 import android.app.Notification;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
@@ -16,8 +19,16 @@ public class NotificationGetterService extends NotificationListenerService {
     private static final String KEY_SUMMARY_TEXT = "android.summaryText";
     private static boolean isNotificationAccessEnabled = false;
 
-    public static boolean isIsNotificationAccessEnabled() {
+    public static boolean isNotificationAccessEnabledInstance() {
         return isNotificationAccessEnabled;
+    }
+
+    public static String getEnabledNotificationListeners(Context context) {
+        ContentResolver contentResolver = context.getContentResolver();
+        String rawListeners = Settings.Secure.getString(contentResolver,
+                "enabled_notification_listeners");
+
+        return TextUtils.isEmpty(rawListeners) ? "none" : rawListeners;
     }
 
     @Override

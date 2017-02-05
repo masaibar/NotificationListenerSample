@@ -32,13 +32,21 @@ public class MainActivity extends AppCompatActivity {
                 sendNotification();
             }
         });
+
+        findViewById(R.id.button_get_listeners).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TextView) findViewById(R.id.text_enabled_listeners))
+                        .setText(NotificationGetterService.getEnabledNotificationListeners(getApplicationContext()));
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         ((TextView) findViewById(R.id.text_status)).setText(
-                NotificationGetterService.isIsNotificationAccessEnabled() ?
+                NotificationGetterService.isNotificationAccessEnabledInstance() ?
                         "enabled" : "disabled"
         );
     }

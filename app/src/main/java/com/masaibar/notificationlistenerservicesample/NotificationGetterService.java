@@ -14,9 +14,7 @@ import android.util.Log;
 
 public class NotificationGetterService extends NotificationListenerService {
 
-    private static final String KEY_TITLE = "android.title";
-    private static final String KEY_BODY = "android.text";
-    private static final String KEY_SUMMARY_TEXT = "android.summaryText";
+    private static final String TARGET_PACKAGE = "com.whatsapp";
     private static boolean isNotificationAccessEnabled = false;
 
     public static boolean isNotificationAccessEnabledInstance() {
@@ -45,6 +43,11 @@ public class NotificationGetterService extends NotificationListenerService {
         }
 
         for (StatusBarNotification statusBarNotification : statusBarNotifications) {
+            String packageName = statusBarNotification.getPackageName();
+            if (!TextUtils.equals(packageName, TARGET_PACKAGE)) {
+                return;
+            }
+
             Notification notification = statusBarNotification.getNotification();
             if (notification == null) {
                 continue;
@@ -54,8 +57,10 @@ public class NotificationGetterService extends NotificationListenerService {
                 continue;
             }
 
-            String packageName = statusBarNotification.getPackageName();
-            Log.d("!!!", String.format("============ %s ============",packageName));
+            Log.d("!!!", String.format("============ %s ============", packageName));
+            Log.d("!!!",
+                    String.format("[%s], value = %s (%s)",
+                            packageName, "when", notification.when));
             for (String key : extra.keySet()) {
                 Object value = extra.get(key);
                 if (value == null) {
